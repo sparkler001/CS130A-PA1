@@ -147,7 +147,7 @@ void Dictionary::bulkInsert(int n, string *keys) {
 //            int **secondMatrix  = randomMatrix(size, 32);
 //            cout << "in the firstHashTable[" << num << "]:" << endl;
 //            cout << "The second matrix is: " << endl;
-            printMatrix(tempHashTable->secondMatrix, size, 32);
+//            printMatrix(tempHashTable->secondMatrix, size, 32);
 
             //set every name in second hash table into its vector unique position
             for(int each = 0; each < collision; each++){
@@ -193,10 +193,11 @@ void Dictionary::insert(string key) {
     }
 
     if(find(key)){
-        cout << "The key has already in the dictionary" << endl;
+        cout << "The key: " << key << " has already in the dictionary" << endl;
         return;
     }
 
+    key = "        " + key;
     //change key to number and get Position in first hash table
     unsigned int number = namesChangeToNumber(key);
     int firstPosition = numberTimesMatrix(firstHashMatrix, firstMatrixRow, number);
@@ -206,6 +207,8 @@ void Dictionary::insert(string key) {
     int secondPosition = numberTimesMatrix(secondMatrix, secondMatrixRow, number);
 
     firstHashTable[firstPosition]->secondHash[secondPosition]->push_back(key);
+    firstHashTable[firstPosition]->secondHashTableSize++;
+    cout << "insert key: " << key << "is successful!" << endl;
     return;
 }
 
@@ -221,10 +224,11 @@ void Dictionary::remove(string key) {
     }
 
     if(!find(key)){
-        cout << "The key does not exist in the dictionary" << endl;
+        cout << "The key: " << key << " does not exist in the dictionary" << endl;
         return;
     }
 
+    key = "        " + key;
     //change key to number and get Position in first hash table
     unsigned int number = namesChangeToNumber(key);
     int firstPosition = numberTimesMatrix(firstHashMatrix, firstMatrixRow, number);
@@ -257,16 +261,21 @@ bool Dictionary::find(string key) {
         return false;
     }
 
+    key = "        " + key;
     //change key to number and get Position in first hash table
     unsigned int number = namesChangeToNumber(key);
     int firstPosition = numberTimesMatrix(firstHashMatrix, firstMatrixRow, number);
 
-    if(firstHashTable[firstPosition]->secondMatrix == NULL) return false;
+    if(firstHashTable[firstPosition]->secondHashTableSize == 0) return false;
 
     //get position in second hash table
     int** secondMatrix = firstHashTable[firstPosition]->secondMatrix;
     int secondMatrixRow = firstHashTable[firstPosition]->matrixSize;
     int secondPosition = numberTimesMatrix(secondMatrix, secondMatrixRow, number);
+
+//    cout << "secondMatrix is " << endl;
+//    printMatrix(secondMatrix, secondMatrixRow, 32);
+//    cout << "second position is " << secondPosition << endl;
 
     if(firstHashTable[firstPosition]->secondHash == NULL) return false;
 
@@ -336,7 +345,7 @@ int** Dictionary::getSecondHashFunction(int sizeOfKeys, int nsquare, string *key
 
     while (true) {
         int **Newmatrix = randomMatrix(matrix_row, 32);
-        printMatrix(Newmatrix, matrix_row, 32);
+//        printMatrix(Newmatrix, matrix_row, 32);
 
         for (int c = 0; c < tableSize; c++) {
             collision_array[c] = 0;
@@ -370,7 +379,7 @@ int** Dictionary::getSecondHashFunction(int sizeOfKeys, int nsquare, string *key
 
         int sum = 0;
         for (int e = 0; e < tableSize; e++) {
-            cout << collision_array[e] << endl;
+//            cout << collision_array[e] << endl;
             if(collision_array[e] > 1) {
                 sum++;
             }
