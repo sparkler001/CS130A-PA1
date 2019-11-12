@@ -108,6 +108,11 @@ void Dictionary::bulkInsert(int n, string *keys) {
 
             tempHashTable->secondHash = new vector<string>*[numberOfBucket];
 
+            //initialize every second hash table buckect
+            for(int each = 0; each < numberOfBucket; each++){
+                tempHashTable->secondHash[each] = new vector<string>[1];
+            }
+
             cout << "size is " << size << endl;
 //            cout << "the second hash vector has been newed" << endl;
 
@@ -388,13 +393,13 @@ void Dictionary::print(){
             for(int j = 0; j < secondHashSize; j++) {
 //                cout << firstHashTable[each]->secondHash[j]->empty() << endl;
 //                cout << j << endl;
-                if(firstHashTable[each]->secondHash[j]){
-                    cout << "there is something on this vector" << j << endl;
+                if(!firstHashTable[each]->secondHash[j]->empty()){
+//                    cout << "there is something on this vector" << j << endl;
 //                    cout << firstHashTable[each]->secondHash[j]->size() << endl;
 //                    cout << "-----" << endl;
-//                    for(int i = 0; i < firstHashTable[each]->secondHash[j]->size(); i++)
-//                        cout << "The elements stored in position " << i << " is: "
-//                         << firstHashTable[each]->secondHash[j]->at(i) << endl;
+                    for(int i = 0; i < firstHashTable[each]->secondHash[j]->size(); i++)
+                        cout << "The elements stored in position " << i << " is: "
+                         << firstHashTable[each]->secondHash[j]->at(i) << endl;
                 }
             }
         }
@@ -402,34 +407,7 @@ void Dictionary::print(){
 }
 
 int main(){
-
-//    Dictionary dic;
-//    string* key = new string[3];
-//    key[1] = "2asdfkgkygghdjrdjdfgjffsdfafdsafsffghmklughlh";
-//    key[2] = "asdfweghmfkulhlhiuohiuhksdfsdfsafdsafasdf";
-//    key[0] = "yhjykgkguguasdfasdfasflyluyhuluhliughhuhiuhoisdfsafdaf";
-//
-//    int** matrix = dic.getFirstHashFunction(3, key);
-//    printMatrix(matrix, 2, 32);
-//    for(int i = 0; i < 3; i++) {
-//        int number   = namesChangeToNumber(key[i]);
-//        cout << key[i] << " number is " << number << endl;
-//        int position = numberTimesMatrix(matrix, 2, number);
-//        cout << key[i] << " position is " << position << endl;
-//    }
-
-//    int** matrix = randomMatrix(3, 4);
-//    printMatrix(matrix, 3, 4);
-
-
-//    string s = "ssqqqqq";
-//    int a = namesChangeToNumber(s);
-//    cout << a << endl;
-//    int **matrix = randomMatrix(4,32);
-//    printMatrix(matrix, 4, 32);
-//    int c = numberTimesMatrix(matrix, 4, 100);
-//    cout << c << endl;
-
+    
     Dictionary dic;
     string* key = new string[10];
     key[1] = "2asdfkgkygghdjrdjdfgjfffghm";
