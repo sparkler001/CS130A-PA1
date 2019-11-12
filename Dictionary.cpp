@@ -76,25 +76,25 @@ void Dictionary::bulkInsert(int n, string *keys) {
     }
 
 
-    //print all the elements in the second hash table
-    for(int i = 0; i < numberOfBucket; i++){
-        if(!firstHashTable[i]->tempStoreNames.empty()){
-            cout << "in the firstHashTable[" << i << "]:" << endl;
-            cout << "collision is " << firstHashTable[i]->numOfCollision;
-            for (int j = 0; j < firstHashTable[i]->tempStoreNames.size(); j++){
-                cout << firstHashTable[i]->tempStoreNames.at(j) << namesChangeToNumber(firstHashTable[i]->tempStoreNames.at(j)) << endl;
-            }
-        }
-        cout << "-----" << endl;
-    }
-    cout << "finish print all the elements" << endl;
+//    print all the elements in the second hash table
+//    for(int i = 0; i < numberOfBucket; i++){
+//        if(!firstHashTable[i]->tempStoreNames.empty()){
+//            cout << "in the firstHashTable[" << i << "]:" << endl;
+//            cout << "collision is " << firstHashTable[i]->numOfCollision;
+//            for (int j = 0; j < firstHashTable[i]->tempStoreNames.size(); j++){
+//                cout << firstHashTable[i]->tempStoreNames.at(j) << namesChangeToNumber(firstHashTable[i]->tempStoreNames.at(j)) << endl;
+//            }
+//        }
+//        cout << "-----" << endl;
+//    }
+//    cout << "finish print all the elements" << endl;
 //    cout << numberOfBucket << endl;
 
     //find the second hash matrix, store it and names with same matrix
     for(int num = 0; num < numberOfBucket; num++) {
         SecondHashTable* tempHashTable = firstHashTable[num];
         int collision = tempHashTable->numOfCollision;
-        cout << "collision is " << collision << endl;
+//        cout << "collision is " << collision << endl;
 
         if (collision != 0) {
             //create the square of collision number of space in secondHash
@@ -113,7 +113,7 @@ void Dictionary::bulkInsert(int n, string *keys) {
                 tempHashTable->secondHash[each] = new vector<string>[1];
             }
 
-            cout << "size is " << size << endl;
+//            cout << "size is " << size << endl;
 //            cout << "the second hash vector has been newed" << endl;
 
 //            for(int i = 0; i < numberOfBucket; i++){
@@ -135,18 +135,18 @@ void Dictionary::bulkInsert(int n, string *keys) {
 
             for (int each = 0; each < collision; each++){
                 name_array[each] = firstHashTable[num]->tempStoreNames[each];
-                cout << firstHashTable[num]->tempStoreNames[each] << endl;
+//                cout << firstHashTable[num]->tempStoreNames[each] << endl;
             }
 
-            cout << "number of bucket is " << numberOfBucket << endl;
+//            cout << "number of bucket is " << numberOfBucket << endl;
             tempHashTable->secondMatrix = getSecondHashFunction(collision, numberOfBucket, name_array);
 //            break;
 
             //check the second hash matrix in order to keep every names in different position
 //            bool matrixWorks    = true;
 //            int **secondMatrix  = randomMatrix(size, 32);
-            cout << "in the firstHashTable[" << num << "]:" << endl;
-            cout << "The second matrix is: " << endl;
+//            cout << "in the firstHashTable[" << num << "]:" << endl;
+//            cout << "The second matrix is: " << endl;
             printMatrix(tempHashTable->secondMatrix, size, 32);
 
             //set every name in second hash table into its vector unique position
@@ -155,34 +155,35 @@ void Dictionary::bulkInsert(int n, string *keys) {
                 string name = tempHashTable->tempStoreNames[each];
 //                string name = name_array[each];
 //                cout << name << endl;
-                cout << "name is " << name << endl;
+//                cout << "name is " << name << endl;
                 unsigned int elementsNumberOfKey     = namesChangeToNumber(name);
                 int secondHashTablePosition = numberTimesMatrix(tempHashTable->secondMatrix, size, elementsNumberOfKey);
-                cout<<secondHashTablePosition<<endl;
+//                cout<<secondHashTablePosition<<endl;
 //                cout << elementsNumberOfKey << endl;
-                cout << secondHashTablePosition << endl;
+//                cout << secondHashTablePosition << endl;
 //                cout << tempHashTable->secondHash->size() << endl;
 
                 tempHashTable->secondHash[secondHashTablePosition] = new vector<string>[1];
                 tempHashTable->secondHash[secondHashTablePosition]->push_back(name);
-                cout << "secondHash table size is " << tempHashTable->secondHash[secondHashTablePosition]->size() << endl;
-                cout << "this table is empty: " << tempHashTable->secondHash[secondHashTablePosition]->empty() << endl;
-                cout << "finish" << endl;
+//                cout << "secondHash table size is " << tempHashTable->secondHash[secondHashTablePosition]->size() << endl;
+//                cout << "this table is empty: " << tempHashTable->secondHash[secondHashTablePosition]->empty() << endl;
+//                cout << "finish" << endl;
             }
         }else{
             tempHashTable->secondHash = new vector<string>*[1];
             tempHashTable->secondHash[0] = new vector<string>[1];
 
-            cout << "finish 2" << endl;
+//            cout << "finish 2" << endl;
         }
     }
 
     this->firstHashTable = firstHashTable;
+    print();
 }
 
 void Dictionary::insert(string key) {
     if(key.empty()){
-        cout << "empty input" << endl;
+        cout << "the input key is empty!" << endl;
         return;
     }
 
@@ -210,7 +211,7 @@ void Dictionary::insert(string key) {
 
 void Dictionary::remove(string key) {
     if(key.empty()){
-        cout << "empty input" << endl;
+        cout << "the input key is empty!" << endl;
         return;
     }
 
@@ -238,15 +239,23 @@ void Dictionary::remove(string key) {
     for(vector<string>::iterator it = secondHashTable->begin(); it != secondHashTable->end(); ) {
         if (*it == key) {
             it = secondHashTable->erase(it);
+            cout << "this key: " << key << " has already been removed!" << endl;
             return;
-        } else {
-            ++it;
         }
+            ++it;
     }
 }
 
 bool Dictionary::find(string key) {
-    if(key.empty() || firstHashMatrix == NULL) return false;
+    if(key.empty()){
+        cout << "the input key is empty!" << endl;
+        return false;
+    }
+
+    if(firstHashMatrix == NULL){
+        cout << "the dictionary is not exist" << endl;
+        return false;
+    }
 
     //change key to number and get Position in first hash table
     unsigned int number = namesChangeToNumber(key);
@@ -263,9 +272,12 @@ bool Dictionary::find(string key) {
 
     vector<string>* secondHashTable = firstHashTable[firstPosition]->secondHash[secondPosition];
     for(int i = 0; i < secondHashTable->size(); i++){
-        if(key == secondHashTable->at(i))
+        if(key == secondHashTable->at(i)) {
+            cout << "this key: " << key << " has been stored in this dictionary!" << endl;
             return true;
+        }
     }
+    cout << "this key: " << key << " has not been stored in this dictionary!" << endl;
     return false;
 }
 
@@ -317,8 +329,8 @@ int** Dictionary::getSecondHashFunction(int sizeOfKeys, int nsquare, string *key
     int matrix_row = ceil(log2(nsquare));
     if (nsquare == 1) matrix_row = 1;
     int tableSize = pow(2, matrix_row);
-    cout << matrix_row << endl;
-    cout << tableSize << endl;
+//    cout << matrix_row << endl;
+//    cout << tableSize << endl;
 
     int collision_array[tableSize];
 
@@ -335,7 +347,7 @@ int** Dictionary::getSecondHashFunction(int sizeOfKeys, int nsquare, string *key
         for (int d = 0; d < sizeOfKeys; d++) {
             keys[d] = "        " + keys[d];
             int *array = Array_keys(keys[d].substr(keys[d].length() - 8));
-            cout << d << endl;
+//            cout << d << endl;
             int position[matrix_row];
             for (int k = 0; k < matrix_row; k++) {
                 int result = 0;
@@ -354,7 +366,7 @@ int** Dictionary::getSecondHashFunction(int sizeOfKeys, int nsquare, string *key
             collision_array[int_position] += 1;
         }
 
-        cout << "the collision array is " << endl;
+//        cout << "the collision array is " << endl;
 
         int sum = 0;
         for (int e = 0; e < tableSize; e++) {
@@ -364,12 +376,8 @@ int** Dictionary::getSecondHashFunction(int sizeOfKeys, int nsquare, string *key
             }
         }
 
-        cout << "sum is " << sum << endl;
+//        cout << "sum is " << sum << endl;
 
-//        if (sum < (4 * n)) {
-//            this->firstHashMatrix = Newmatrix;
-//            return Newmatrix;
-//            break;
         if(sum == 0) return Newmatrix;
 
         }
@@ -388,17 +396,13 @@ void Dictionary::print(){
             cout << "The second matrix is: " << endl;
             printMatrix(firstHashTable[each]->secondMatrix, firstHashTable[each]->matrixSize, 32);
             int secondHashSize =  firstHashTable[each]->secondHashTableSize;
-            cout << "size is " << firstHashTable[each]->secondHashTableSize << endl;
+//            cout << "size is " << firstHashTable[each]->secondHashTableSize << endl;
 
             for(int j = 0; j < secondHashSize; j++) {
-//                cout << firstHashTable[each]->secondHash[j]->empty() << endl;
-//                cout << j << endl;
+
                 if(!firstHashTable[each]->secondHash[j]->empty()){
-//                    cout << "there is something on this vector" << j << endl;
-//                    cout << firstHashTable[each]->secondHash[j]->size() << endl;
-//                    cout << "-----" << endl;
                     for(int i = 0; i < firstHashTable[each]->secondHash[j]->size(); i++)
-                        cout << "The elements stored in position " << i << " is: "
+                        cout << "The elements stored in position " << j << " is: "
                          << firstHashTable[each]->secondHash[j]->at(i) << endl;
                 }
             }
@@ -406,24 +410,162 @@ void Dictionary::print(){
     }
 }
 
-int main(){
-    
-    Dictionary dic;
-    string* key = new string[10];
-    key[1] = "2asdfkgkygghdjrdjdfgjfffghm";
-    key[2] = "asdfweghmfhk";
-    key[0] = "yhjykgkgugulyluyhuluh";
-    key[3] = "weqrwezxsdfsdf";
-    key[4] = "aseqwerqwr";
-    key[5] = "aseqwersdfaqqwerzz";
-    key[6] = "122123asdaserqwerolxzc";
-    key[7] = "12sdf2123asdaserqwerolsdfaqxzc";
-    key[8] = "12sdf2123asdaserqwerolsdfaqxzcsafqewr12313";
-    key[9] = "12sdf2123asdaserqwerolsdfqwerqewsxczc";
-//    dic.getSecondHashFunction(49, key);
-//    dic.getFirstHashFunction(7, key);
-    dic.bulkInsert(10, key);
-    dic.print();
+//int main(){
+//
+//    Dictionary dic;
+//    string* key = new string[10];
+//    key[1] = "2asdfkgkygghdjrdjdfgjfffghm";
+//    key[2] = "asdfweghmfhk";
+//    key[0] = "yhjykgkgugulyluyhuluh";
+//    key[3] = "weqrwezxsdfsdf";
+//    key[4] = "aseqwerqwr";
+//    key[5] = "aseqwersdfaqqwerzz";
+//    key[6] = "122123asdaserqwerolxzc";
+//    key[7] = "12sdf2123asdaserqwerolsdfaqxzc";
+//    key[8] = "12sdf2123asdaserqwerolsdfaqxzcsafqewr12313";
+//    key[9] = "12sdf2123asdaserqwerolsdfqwerqewsxczc";
+////    dic.getSecondHashFunction(49, key);
+////    dic.getFirstHashFunction(7, key);
+//    dic.bulkInsert(10, key);
+//    dic.print();
+//    cout << "-----" << endl;
+//    dic.insert("");
+//    cout << "-----" << endl;
+//    dic.print();
+//}
 
-    vector<string>** a = new vector<string>*[1];
+void small_dict_test()
+{
+
+    /* Small dictionary test as given in the provided test module. */
+    cout << "!!!Small dictionary test starts!!!" << endl;
+
+    // Initialize the dictionary.
+    Dictionary small_dict;
+
+    // BulkInsert the keys into the dictionary.
+    /* Expected results: hash functions used, sum of squares of number of keys, number of trials, 3pts, 1pt each*/
+    string strs[] = {"Fred Astaire", "Lauren Bacall", "Brigitte Bardot", "John Belushi", "Ingmar Bergman"};
+    int n = 5;
+    small_dict.bulkInsert(n, strs);
+
+
+    // Insert "Humphrey Bogart" into the dictionary.
+    /* Expected results: whether collisions happened in second level, 1pt*/
+    small_dict.insert("Humphrey Bogart");
+
+    // Remove "Lauren Bacall" from the dictionary.
+    /* Expected results: removal is successful, 1pt*/
+    small_dict.remove("Lauren Bacall");
+
+    // Find "Fred Astaire" in the dictionary.
+    /* Expected results: print 1, finding is successful, buckets accessed during the process, 1pt*/
+    cout << small_dict.find("Fred Astaire") << endl;
+
+    // Find "Lauren Bacall" in the dictionary.
+    /* Expected results: print 0, finding is unsuccessful, item doesn't exist, 1pt*/
+    cout << small_dict.find("Lauren Bacall") << endl;
+}
+
+void large_dict_test()
+{
+
+    /* Large dictionary test. */
+    cout << "!!!Large dictionary test starts!!!" << endl;
+
+    // Initialize the dictionary.
+    Dictionary large_dict;
+
+    // BulkInsert the keys into the dictionary.
+    /* Expected results: hash functions used, sum of squares of number of keys, number of trials, 3pts, 1pt each*/
+    string strs[] = {"Emma Ember", "Olivia Rosalie", "Ava Journee", "Isabella Presley", "Sophia Amy",
+                     "Mia Mckenzie", "Amelia Alaina", "Harper Brooke", "Evelyn Alana",
+                     "Abigail Summer", "Emily Rachel", "Elizabeth Mya", "Mila Everleigh", "Ella Daniela",
+                     "Avery Jocelyn", "Sofia Amara", "Camila Josie", "Aria Gracie", "Scarlett Callie", "Victoria Ayla",
+                     "Madison Londyn", "Luna Elliana", "Grace Sienna", "Chloe Juliette", "Penelope Diana",
+                     "Layla Lucia", "Riley Laila", "Zoey Sloane", "Nora London", "Lily Alexis", "Eleanor Teagan",
+                     "Hannah Remi", "Lillian Elise", "Addison Harmony", "Aubrey Arabella", "Ellie Sara",
+                     "Stella Genevieve", "Natalie Lauren", "Zoe Kimberly", "Leah ", "Hazel Daisy", "Violet Trinity",
+                     "Aurora Eloise", "Savannah Jordyn", "Brooklyn Morgan", "Bella Finley",
+                     "Claire Parker", "Skylar Lilly", "Lucy Aliyah", "Paisley Reese", "Everly Molly", "Anna Alina",
+                     "Caroline Valerie", "Nova Cecilia", "Genesis Ariel", "Emilia Esther", "Kennedy Charlie",
+                     "Samantha Juliana", "Maya Alyssa", "Willow Kayla", "Kinsley Anastasia", "Naomi Emersyn",
+                     "Aaliyah Eden", "Elena Ryleigh", "Sarah Adalyn", "Ariana Emerson", "Allison Valeria",
+                     "Gabriella Annabelle", "Alice Norah", "Madelyn Isabel", "Cora Iris", "Ruby Melody", "Eva Jasmine",
+                     "Serenity Khloe", "Autumn Andrea", "Adeline Bailey", "Hailey Brianna", "Gianna Eliza",
+                     "Valentina Amaya", "Isla Ashley", "Eliana Lyla", "Quinn Margaret", "Nevaeh Mary", "Ivy Alexandra",
+                     "Sadie Kylie", "Piper Rose", "Lydia Faith", "Alexa Taylor", "Josephine Leilani", "Emery Arya",
+                     "Julia Ximena", "Delilah Athena", "Arianna Maria", "Vivian Raelynn", "Kaylee Natalia",
+                     "Sophie Isabelle", "Brielle Katherine", "Madeline Jade", "Peyton Aubree", "Rylee Liliana",
+                     "Clara Adalynn", "Hadley Reagan", "Melanie Mackenzie", "Mackenzie Melanie", "Reagan Hadley",
+                     "Adalynn Clara", "Liliana Rylee", "Aubree Peyton", "Jade Madeline", "Katherine Brielle",
+                     "Isabelle Sophie", "Natalia Kaylee", "Raelynn Vivian", "Maria Arianna", "Athena Delilah",
+                     "Ximena Julia", "Arya Emery", "Leilani Josephine", "Taylor Alexa", "Faith Lydia", "Rose Piper",
+                     "Kylie Sadie", "Alexandra Ivy", "Mary Nevaeh", "Margaret Quinn", "Lyla Eliana", "Ashley Isla",
+                     "Amaya Valentina", "Eliza Gianna", "Brianna Hailey", "Bailey Adeline", "Andrea Autumn",
+                     "Khloe Serenity", "Jasmine Eva", "Melody Ruby", "Iris Cora", "Isabel Madelyn", "Norah Alice",
+                     "Annabelle Gabriella", "Valeria Allison", "Emerson Ariana", "Adalyn Sarah", "Ryleigh Elena",
+                     "Eden Aaliyah", "Emersyn Naomi", "Anastasia Kinsley", "Kayla Willow", "Alyssa Maya",
+                     "Juliana Samantha", "Charlie Kennedy", "Esther Emilia", "Ariel Genesis", "Cecilia Nova",
+                     "Valerie Caroline", "Alina Anna", "Molly Everly", "Reese Paisley", "Aliyah Lucy", "Lilly Skylar",
+                     "Parker Claire", "Finley Bella", "Morgan Brooklyn", "Sydney Audrey", "Jordyn Savannah",
+                     "Eloise Aurora", "Trinity Violet", "Daisy Hazel", " Leah", "Kimberly Zoe", "Lauren Natalie",
+                     "Genevieve Stella", "Sara Ellie", "Arabella Aubrey", "Harmony Addison", "Elise Lillian",
+                     "Remi Hannah", "Teagan Eleanor", "Alexis Lily", "London Nora", "Sloane Zoey", "Laila Riley",
+                     "Lucia Layla", "Diana Penelope", "Juliette Chloe", "Sienna Grace", "Elliana Luna",
+                     "Londyn Madison", "Callie Scarlett", "Gracie Aria", "Josie Camila", "Amara Sofia",
+                     "Jocelyn Avery", "Daniela Ella", "Everleigh Mila", "Mya Elizabeth", "Rachel Emily",
+                     "Summer Abigail", "Alana Evelyn", "Brooke Harper", "Alaina Amelia", "Mckenzie Mia",
+                     "Catherine Charlotte", "Amy Sophia", "Presley Isabella", "Journee Ava", "Rosalie Olivia",
+                     "Ember Emma"};
+    int n = 207;
+    large_dict.bulkInsert(n, strs);
+
+    // Find "Lillian Elise" in the dictionary.
+    /* Expected results: print 1, finding is successful, buckets accessed during the process, 1pt*/
+    cout << large_dict.find("Lillian Elise") << endl;
+
+    // Remove "Zexi Huang" from the dictionary.
+    /* Expected results: removal is unsuccessful, item doesn't exist, 1pt*/
+    large_dict.remove("Zexi Huang");
+
+    // Insert "Sean Jaffe" into the dictionary.
+    /* Expected results: whether collisions happened in second level, 1pt*/
+    large_dict.insert("Sean Jaffe");
+
+    // Find "Sean Jaffe" in the dictionary.
+    /* Expected results: print 1, finding is successful, buckets accessed during the process, 1pt*/
+    cout << large_dict.find("Sean Jaffe") << endl;
+
+    // Remove "Brooklyn Morgan" from the dictionary.
+    /* Expected results: removal is successful, 1pt*/
+    large_dict.remove("Brooklyn Morgan");
+
+    // Find "Lillian Elise" in the dictionary.
+    /* Expected results: print 1, finding is successful, buckets accessed during the process, results should be the same as the first find, 1pt*/
+    cout << large_dict.find("Lillian Elise") << endl;
+
+    // Find "Brooklyn Morgan" from the dictionary.
+    /* Expected results: print 0, finding is unsuccessful, 1pt*/
+    cout << large_dict.find("Brooklyn Morgan") << endl;
+
+    // Remove "Lillian Elise" from the dictionary.
+    /* Expected results: removal is successful, 1pt*/
+    large_dict.remove("Lillian Elise");
+
+    // Insert "Lillian Elise" into the dictionary.
+    /* Expected results: whether collisions happened in second level, 1pt*/
+    large_dict.insert("Lillian Elise");
+
+    // Find "Lillian Elise" in the dictionary.
+    /* Expected results: print 1, finding is successful, buckets accessed during the process, results should be the same as the first find, 1pt*/
+    cout << large_dict.find("Lillian Elise") << endl;
+}
+
+int main()
+{
+    small_dict_test();
+    large_dict_test();
+
+    return 0;
 }
