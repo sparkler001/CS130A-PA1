@@ -19,6 +19,7 @@ struct SecondHashTable{
     vector<string> tempStoreNames;
     int secondHashTableSize;
     int matrixSize;
+    int tryTimes;
 };
 
 class Dictionary {

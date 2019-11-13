@@ -51,6 +51,7 @@ void Dictionary::bulkInsert(int n, string *keys) {
         secondHashTable->numOfCollision      = 0;
         secondHashTable->secondHashTableSize = 0;
         secondHashTable->matrixSize          = 0;
+        secondHashTable->tryTimes            = 0;
 
 //        secondHashTable->secondHash = new vector<string>*;
 
@@ -206,9 +207,18 @@ void Dictionary::insert(string key) {
     int secondMatrixRow = firstHashTable[firstPosition]->matrixSize;
     int secondPosition = numberTimesMatrix(secondMatrix, secondMatrixRow, number);
 
+    int collision = 0;
+    vector<string>* secondHashTable = firstHashTable[firstPosition]->secondHash[secondPosition];
+    if(secondHashTable->size() != 0){
+        for(vector<string>::iterator it = secondHashTable->begin(); it != secondHashTable->end(); it++) {
+            collision++;
+        }
+    }
+
     firstHashTable[firstPosition]->secondHash[secondPosition]->push_back(key);
     firstHashTable[firstPosition]->secondHashTableSize++;
     cout << "insert key: " << key << "is successful!" << endl;
+    cout << "insert key: " << key << " causes " << collision << " times !" << endl;
     return;
 }
 
@@ -343,7 +353,7 @@ int** Dictionary::getSecondHashFunction(int sizeOfKeys, int nsquare, string *key
 
     int collision_array[tableSize];
 
-    while (true) {
+    while (true){
         int **Newmatrix = randomMatrix(matrix_row, 32);
 //        printMatrix(Newmatrix, matrix_row, 32);
 
